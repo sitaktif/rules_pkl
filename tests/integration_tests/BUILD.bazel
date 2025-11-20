@@ -22,6 +22,12 @@ load(
 
 default_test_runner(
     name = "simple_test_runner",
+    # Explicitly unset the output_base because otherwise it may take an explicit value intended for the main workspace
+    # via the home bazelrc and cause a deadlock (the inner invocation waits for the outer invocation to finish forever).
+    bazel_cmds = [
+        "--nohome_rc info",
+        "--nohome_rc test --announce_rc //...",
+    ],
 )
 
 bazel_integration_tests(
